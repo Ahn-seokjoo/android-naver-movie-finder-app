@@ -5,20 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.example.realnavermoviefinder.databinding.ItemMovieImageBinding
 
 //Viewholder 패턴
 //ViewBinding 적용
 //클릭 이벤트 처리
 
 class MovieGridAdapter : BaseAdapter() {
-    class MovieViewHolder(val movieView: View) {
-        val titleTextView = movieView.findViewById<TextView>(R.id.movie_title)
-        val imageView =
-            movieView.findViewById<ImageView>(R.id.movie_image) //액티비티 아닌 곳에서는 이런식으로 앞에 입력해주어야함.
-    }
+    class MovieViewHolder(val binding: ItemMovieImageBinding)
 
     private val movieList = mutableListOf<ResultGetSearchMovies.Items>()//비어있는 리스트로 일단 초기화
 
@@ -34,18 +29,21 @@ class MovieGridAdapter : BaseAdapter() {
 //      val inflater = parent!!.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val inflater = LayoutInflater.from(parent!!.context) //요샌 이렇게 인플레이터를 받는다.
             //LayoutInflater = layout 리소스(xml)를 인스턴스화 할 때 필요한 객체 (인플레이터 통해서 리소스를 코드로 바꿈)
-            val movieView: View =
-                inflater.inflate(R.layout.item_movie_image, parent, false) //인플레이트는 자원을 많이 사용함
+            val binding: ItemMovieImageBinding =
+                ItemMovieImageBinding.inflate(inflater, parent, false) //인플레이트는 자원을 많이 사용함
             //UI 표시          //findviwbyid도 비용이 비싸다  //뷰홀더는 이를 한번 쓴걸 이용해 재활용하겠다는 의미
-            viewHolder = MovieViewHolder(movieView)
-            movieView.tag = viewHolder //tag란 모든 view에 있는 딱히 용도가 정해져 있지 않은 .. 엮고싶을 때 씀
+            viewHolder = MovieViewHolder(binding)
+
+            viewHolder.binding.root.tag = viewHolder //root안에 뷰가 있음
+            //tag란 모든 view에 있는 딱히 용도가 정해져 있지 않은 .. 엮고싶을 때 씀
         } else {
             viewHolder = convertView.tag as MovieViewHolder
         }
 
         val data = movieList[position]
-        viewHolder.titleTextView.text = data.title
-        Glide.with(viewHolder.imageView).load(data.image).into(viewHolder.imageView)
+        viewHolder.binding.movieTitle.text = data.title
+        Glide.with(viewHolder.binding.movieImage).load(data.image)
+            .into(viewHolder.binding.movieImage)
 
         val result: Intent? = null
 //        movieView.setOnClickListener {
@@ -53,7 +51,7 @@ class MovieGridAdapter : BaseAdapter() {
 //            result?.getStringArrayListExtra("movie")
 //            // Log.d(TAG, "클릭 성공 : $binding")
 //        }
-        return viewHolder.movieView
+        return viewHolder.binding.root
     }
 
     override fun getItem(position: Int): Any {
