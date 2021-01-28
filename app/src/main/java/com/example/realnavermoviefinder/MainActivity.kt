@@ -1,10 +1,8 @@
 package com.example.realnavermoviefinder
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.viewbinding.ViewBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.example.realnavermoviefinder.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,9 +15,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        binding.searchButton.setOnClickListener{
+        binding.searchButton.setOnClickListener {
             val intent = Intent(this, ResultActivity::class.java)
-            intent.putExtra("movieTitle",binding.movieTitle.text.toString())
+            intent.putExtra("movieTitle", binding.movieTitle.text.toString())
             startActivity(intent)
         }
 

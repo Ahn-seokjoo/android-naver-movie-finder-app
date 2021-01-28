@@ -1,6 +1,5 @@
 package com.example.realnavermoviefinder
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,16 +44,10 @@ class MovieGridAdapter : BaseAdapter() {
         Glide.with(viewHolder.binding.movieImage).load(data.image)
             .into(viewHolder.binding.movieImage)
 
-        val result: Intent? = null
-//        movieView.setOnClickListener {
-//            //웹뷰에 해당 영화 link를 줌
-//            result?.getStringArrayListExtra("movie")
-//            // Log.d(TAG, "클릭 성공 : $binding")
-//        }
         return viewHolder.binding.root
     }
 
-    override fun getItem(position: Int): Any {
+    override fun getItem(position: Int): ResultGetSearchMovies.Items {
         return movieList[position]
     }
 

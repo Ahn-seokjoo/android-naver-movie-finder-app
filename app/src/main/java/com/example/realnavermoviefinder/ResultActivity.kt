@@ -1,5 +1,7 @@
 package com.example.realnavermoviefinder
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,13 @@ private const val CLIENT_SECRET = "kRPqaEb4De"
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
+    fun openWebPage(url: String) {
+        val webpage: Uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, webpage)
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +42,14 @@ class ResultActivity : AppCompatActivity() {
         val api = retrofit.create(NaverAPI::class.java)
         val callGetSearchMovies = api.getSearchMovies(CLIENT_ID, CLIENT_SECRET, movieTitle)
         val movieInfoList = ArrayList<String>()
+
         val adapter = MovieGridAdapter()
         binding.gridView.adapter = adapter
+        binding.gridView.setOnItemClickListener { parent, view, position, id ->
+            val movie = adapter.getItem(position)
+            openWebPage(movie.link)
+            // 웹브라우저에 띄우기
+        }
 
         //데이터 준비
         callGetSearchMovies.enqueue(object : retrofit2.Callback<ResultGetSearchMovies> {
