@@ -1,7 +1,5 @@
 package com.example.realnavermoviefinder
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 class ResultGetSearchMovies(
@@ -11,8 +9,6 @@ class ResultGetSearchMovies(
     @SerializedName("display") var display: Int ,
     @SerializedName("items") var items: List<Items>
 ) {
-
-
     data class Items(
     @SerializedName("title") var title: String = "",
     @SerializedName("link") var link: String = "",
@@ -22,9 +18,6 @@ class ResultGetSearchMovies(
     @SerializedName("director") var director: String = "",
     @SerializedName("actor") var actor: String = "",
     @SerializedName("userRating") var userRating: Double
-) {
-
-}
-
+)
 
 }

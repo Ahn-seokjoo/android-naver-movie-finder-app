@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.realnavermoviefinder.databinding.ActivityResultBinding
 import retrofit2.Call
 import retrofit2.Response
@@ -43,13 +44,17 @@ class ResultActivity : AppCompatActivity() {
         val callGetSearchMovies = api.getSearchMovies(CLIENT_ID, CLIENT_SECRET, movieTitle)
         val movieInfoList = ArrayList<String>()
 
-        val adapter = MovieGridAdapter()
-        binding.gridView.adapter = adapter
-        binding.gridView.setOnItemClickListener { parent, view, position, id ->
-            val movie = adapter.getItem(position)
-            openWebPage(movie.link)
-            // 웹브라우저에 띄우기
-        }
+        val adapter = MovieRecyclerAdapter()
+        val lm = LinearLayoutManager(this)
+
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = lm
+        binding.recyclerView.setHasFixedSize(true)
+//        binding.recyclerView.setOnClickListener(this){
+//            val movie = adapter.onBindViewHolder(position)
+//            openWebPage(movie.link)
+//            // 웹브라우저에 띄우기
+//        }
 
         //데이터 준비
         callGetSearchMovies.enqueue(object : retrofit2.Callback<ResultGetSearchMovies> {
@@ -66,13 +71,6 @@ class ResultActivity : AppCompatActivity() {
                     movieInfoList.addAll(listOf(element.title, element.link, element.image))
                 }//movieInfoList = 데이터
                 Log.d(TAG, "성공 : $movieInfoList")
-                //  val nextIntent = Intent(this@ResultActivity,ResultActivity::class.java)
-                // nextIntent.getStringArrayListExtra(movieInfoList.toString())
-//            startActivity(nextIntent)
-
-                //  val adapter = GridAdapter(this@ResultActivity, response.body()!!)
-                //  setContentView(binding.root)
-                // startActivity(nextIntent)
             }
 
             override fun onFailure(call: Call<ResultGetSearchMovies>, t: Throwable) {
