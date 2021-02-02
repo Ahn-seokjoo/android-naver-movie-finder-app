@@ -4,8 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.realnavermoviefinder.databinding.ActivityResultBinding
 import retrofit2.Call
 import retrofit2.Response
@@ -17,6 +18,8 @@ val TAG = ResultActivity::class.java.simpleName
 private const val BASE_URL_NAVER_API = "https://openapi.naver.com/"
 private const val CLIENT_ID = "7X1yGh22vxm3pKHFpPgi"
 private const val CLIENT_SECRET = "kRPqaEb4De"
+
+//클릭 리스너 구현
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
@@ -45,17 +48,18 @@ class ResultActivity : AppCompatActivity() {
         val movieInfoList = ArrayList<String>()
 
         val adapter = MovieRecyclerAdapter()
-        val lm = LinearLayoutManager(this)
+        val gm = GridLayoutManager(this, 2)
 
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = lm
+        binding.recyclerView.layoutManager = gm
         binding.recyclerView.setHasFixedSize(true)
-//        binding.recyclerView.setOnClickListener(this){
-//            val movie = adapter.onBindViewHolder(position)
-//            openWebPage(movie.link)
-//            // 웹브라우저에 띄우기
-//        }
-
+        adapter.setItemClickListener(object : MovieRecyclerAdapter.ItemClickListener {
+            override fun onClick(view: View, position: Int) {
+                val movie = adapter.getItem(position)
+                openWebPage(movie.link)
+                // 웹브라우저에 띄우기
+            }
+        })
         //데이터 준비
         callGetSearchMovies.enqueue(object : retrofit2.Callback<ResultGetSearchMovies> {
             override fun onResponse(
@@ -65,7 +69,6 @@ class ResultActivity : AppCompatActivity() {
                 response.body()?.let {
                     adapter.submitList(it.items)
                 }
-
                 //           Log.d(TAG, "성공 : ${(response.body()!!.items)}")
                 for (element in response.body()!!.items) {
                     movieInfoList.addAll(listOf(element.title, element.link, element.image))
@@ -77,10 +80,7 @@ class ResultActivity : AppCompatActivity() {
                 Log.d(TAG, "실패 : $t")
             }
         })
-
-
     }
-
 }
 
 
