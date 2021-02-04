@@ -1,9 +1,11 @@
-package com.example.realnavermoviefinder
+package com.example.realnavermoviefinder.view.main
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.realnavermoviefinder.R
 import com.example.realnavermoviefinder.databinding.ActivityMainBinding
+import com.example.realnavermoviefinder.view.result.ResultActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -20,7 +22,5 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("movieTitle", binding.movieTitle.text.toString())
             startActivity(intent)
         }
-
     }
-
 }

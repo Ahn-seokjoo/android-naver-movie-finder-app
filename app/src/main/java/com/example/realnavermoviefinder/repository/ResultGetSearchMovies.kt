@@ -1,4 +1,4 @@
-package com.example.realnavermoviefinder
+package com.example.realnavermoviefinder.repository
 
 import com.google.gson.annotations.SerializedName
 

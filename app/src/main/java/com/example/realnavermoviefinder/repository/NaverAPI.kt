@@ -1,4 +1,4 @@
-package com.example.realnavermoviefinder
+package com.example.realnavermoviefinder.repository
 
 import retrofit2.Call
 import retrofit2.http.GET
