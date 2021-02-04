@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.realnavermoviefinder.databinding.ActivityResultBinding
@@ -47,39 +46,38 @@ class ResultActivity : AppCompatActivity() {
         val callGetSearchMovies = api.getSearchMovies(CLIENT_ID, CLIENT_SECRET, movieTitle)
         val movieInfoList = ArrayList<String>()
 
-        val adapter = MovieRecyclerAdapter()
-        val gm = GridLayoutManager(this, 2)
+        val adapter = MovieRecyclerAdapter { movie -> openWebPage(movie.link) }
 
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = gm
-        binding.recyclerView.setHasFixedSize(true)
-        adapter.setItemClickListener(object : MovieRecyclerAdapter.ItemClickListener {
-            override fun onClick(view: View, position: Int) {
-                val movie = adapter.getItem(position)
-                openWebPage(movie.link)
-                // 웹브라우저에 띄우기
-            }
-        })
+        //binding.recyclerView가 반복되므로 코틀린이 제공하는 확장함수중에서 사용,
+        // 예를들면 also, apply, run, let 등등
+        with(binding.recyclerView) {
+            this.adapter = adapter
+            layoutManager = GridLayoutManager(this@ResultActivity, 2)
+            setHasFixedSize(true)
+        }
+
+
         //데이터 준비
-        callGetSearchMovies.enqueue(object : retrofit2.Callback<ResultGetSearchMovies> {
-            override fun onResponse(
-                call: Call<ResultGetSearchMovies>,
-                response: Response<ResultGetSearchMovies>
-            ) {
-                response.body()?.let {
-                    adapter.submitList(it.items)
+        callGetSearchMovies.enqueue(
+            object : retrofit2.Callback<ResultGetSearchMovies> {
+                override fun onResponse(
+                    call: Call<ResultGetSearchMovies>,
+                    response: Response<ResultGetSearchMovies>
+                ) {
+                    response.body()?.let {
+                        adapter.submitList(it.items)
+                    }
+                    //           Log.d(TAG, "성공 : ${(response.body()!!.items)}")
+                    for (element in response.body()!!.items) {
+                        movieInfoList.addAll(listOf(element.title, element.link, element.image))
+                    }//movieInfoList = 데이터
+                    Log.d(TAG, "성공 : $movieInfoList")
                 }
-                //           Log.d(TAG, "성공 : ${(response.body()!!.items)}")
-                for (element in response.body()!!.items) {
-                    movieInfoList.addAll(listOf(element.title, element.link, element.image))
-                }//movieInfoList = 데이터
-                Log.d(TAG, "성공 : $movieInfoList")
-            }
 
-            override fun onFailure(call: Call<ResultGetSearchMovies>, t: Throwable) {
-                Log.d(TAG, "실패 : $t")
-            }
-        })
+                override fun onFailure(call: Call<ResultGetSearchMovies>, t: Throwable) {
+                    Log.d(TAG, "실패 : $t")
+                }
+            })
     }
 }
 

@@ -1,7 +1,6 @@
 package com.example.realnavermoviefinder
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -9,18 +8,17 @@ import com.example.realnavermoviefinder.MovieRecyclerAdapter.ViewHolder
 import com.example.realnavermoviefinder.databinding.ItemMovieImageBinding
 
 
-class MovieRecyclerAdapter : RecyclerView.Adapter<ViewHolder>() {
+class MovieRecyclerAdapter(val itemClickListener: (movie: ResultGetSearchMovies.Items) -> Unit) :
+    RecyclerView.Adapter<ViewHolder>() {
 
-    interface ItemClickListener {
-        fun onClick(view: View, position: Int)
-    }
+    //SAM = Single Abstract Method 방식
+//    interface ItemClickListener {
+//        fun onClick(view: View, position: Int)
+//    }
+    // ==> 함수형태로 바꿀 수 있다.
+    // (view: View, position:Int) -> Unit
 
-    private lateinit var itemClickListener: ItemClickListener
     private val movieList = mutableListOf<ResultGetSearchMovies.Items>()//비어있는 리스트로 일단 초기화
-
-    fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.itemClickListener = itemClickListener
-    }
 
     fun submitList(data: List<ResultGetSearchMovies.Items>) {
         movieList.clear()
@@ -46,7 +44,7 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(movieList[position])
         holder.itemView.setOnClickListener {
-            itemClickListener.onClick(it, position)
+            itemClickListener.invoke(movieList[position]) //invoke 함수 실행
         }
     }
 
