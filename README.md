@@ -14,10 +14,10 @@
 1. Layout
 - [recyclerView]("https://developer.android.com/guide/topics/ui/layout/recyclerview")
 2. HTTP
-- [retrofit2 2.6.0]("https://github.com/square/retrofit")
-- [gson 2.8.2]("https://github.com/google/gson")
+- [retrofit2]("https://github.com/square/retrofit")
+- [gson]("https://github.com/google/gson")
 3. Image bind
-- [glide 4.11.0]("https://github.com/bumptech/glide")
+- [glide]("https://github.com/bumptech/glide")
 ### **개발 환경**
 ---
 - 언어 - **Kotlin**
